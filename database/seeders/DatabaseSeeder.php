@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
+
 use App\Models\User;
 use App\Models\Sekolah;
 use App\Models\Petugas;
@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'adminmbg',
             'email' => 'admin@mbg.com',
-            'password' => Hash::make('password123'),
+            'password' => 'password123',
             'role' => 'admin'
         ]);
 
@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
         $petugas = User::create([
             'name' => 'Slamet Riyadi',
             'email' => 'petugas@mbg.com',
-            'password' => Hash::make('password123'),
+            'password' => 'password123',
             'role' => 'petugas'
         ]);
 
@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
         $sekolah = User::create([
             'name' => 'MIN 4 Darul Ulum',
             'email' => 'sekolah@mbg.com',
-            'password' => Hash::make('password123'),
+            'password' => 'password123',
             'role' => 'sekolah'
         ]);
 
