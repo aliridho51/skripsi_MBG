@@ -12,6 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
 
+        // Trust semua proxy (Railway menggunakan reverse proxy)
+        $middleware->trustProxies(at: '*');
+
         // DAFTARKAN MIDDLEWARE ROLE DI SINI
         $middleware->alias([
             'role' => \App\Http\Middleware\CekRole::class,
