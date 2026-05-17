@@ -7,32 +7,41 @@
     <title>Panel Petugas - MBG</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ asset('css/animations.css') }}?v={{ time() }}" rel="stylesheet">
 </head>
 
 <body class="bg-gray-100 font-sans leading-normal tracking-normal text-slate-800">
 
+    <!-- Background Particles -->
+    <div class="bg-particle bg-particle-1" style="top: 20%; right: 8%;"></div>
+    <div class="bg-particle bg-particle-2" style="bottom: 10%; left: 5%;"></div>
+
     <div class="flex h-screen overflow-hidden">
 
         <!-- Mobile overlay -->
-        <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden" onclick="toggleSidebar()"></div>
+        <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden modal-overlay-animate" onclick="toggleSidebar()"></div>
 
         <aside id="sidebar" class="w-64 bg-slate-900 text-white flex flex-col shadow-xl fixed inset-y-0 left-0 z-50 transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out">
             <div class="p-6 flex items-center justify-center border-b border-slate-700">
-                <i class="fas fa-motorcycle text-2xl mr-3 text-blue-500"></i>
-                <span class="text-2xl font-bold font-sans tracking-tight">MBG Petugas</span>
+                <i class="fas fa-motorcycle text-2xl mr-3 text-blue-500 animate-float"></i>
+                <span class="text-2xl font-bold font-sans tracking-tight sidebar-logo">MBG Petugas</span>
             </div>
 
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
                 <a href="{{ route('petugas.dashboard') }}"
-                    class="block px-4 py-3 rounded-lg transition {{ request()->routeIs('petugas.dashboard') ? 'bg-blue-600 text-white shadow-lg font-bold' : 'text-gray-400 hover:bg-slate-800 hover:text-white' }}">
+                    class="sidebar-nav-link block px-4 py-3 rounded-lg {{ request()->routeIs('petugas.dashboard') ? 'bg-blue-600 text-white shadow-lg font-bold sidebar-active-link' : 'text-gray-400 hover:bg-slate-800 hover:text-white' }}">
                     <i class="fas fa-home mr-3 w-5 text-center"></i> Dashboard
                 </a>
+                <a href="{{ route('petugas.konfirmasi.halaman') }}"
+                    class="sidebar-nav-link block px-4 py-3 rounded-lg {{ request()->routeIs('petugas.konfirmasi.halaman') ? 'bg-blue-600 text-white shadow-lg font-bold sidebar-active-link' : 'text-gray-400 hover:bg-slate-800 hover:text-white' }}">
+                    <i class="fas fa-check-double mr-3 w-5 text-center"></i> Konfirmasi Pengiriman
+                </a>
                 <a href="{{ route('petugas.riwayat') }}"
-                    class="block px-4 py-3 rounded-lg transition {{ request()->routeIs('petugas.riwayat') ? 'bg-blue-600 text-white shadow-lg font-bold' : 'text-gray-400 hover:bg-slate-800 hover:text-white' }}">
+                    class="sidebar-nav-link block px-4 py-3 rounded-lg {{ request()->routeIs('petugas.riwayat') ? 'bg-blue-600 text-white shadow-lg font-bold sidebar-active-link' : 'text-gray-400 hover:bg-slate-800 hover:text-white' }}">
                     <i class="fas fa-history mr-3 w-5 text-center"></i> Riwayat Pengiriman
                 </a>
                 <a href="{{ route('petugas.profil') }}"
-                    class="block px-4 py-3 rounded-lg transition {{ request()->routeIs('petugas.profil') ? 'bg-blue-600 text-white shadow-lg font-bold' : 'text-gray-400 hover:bg-slate-800 hover:text-white' }}">
+                    class="sidebar-nav-link block px-4 py-3 rounded-lg {{ request()->routeIs('petugas.profil') ? 'bg-blue-600 text-white shadow-lg font-bold sidebar-active-link' : 'text-gray-400 hover:bg-slate-800 hover:text-white' }}">
                     <i class="fas fa-user-circle mr-3 w-5 text-center"></i> Petugas Pengirim
                 </a>
             </nav>
@@ -41,7 +50,7 @@
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit"
-                        class="w-full text-left block px-4 py-3 text-red-400 hover:bg-slate-800 hover:text-red-300 rounded-lg transition font-medium">
+                        class="w-full text-left block px-4 py-3 text-red-400 hover:bg-slate-800 hover:text-red-300 rounded-lg transition font-medium btn-ripple">
                         <i class="fas fa-sign-out-alt mr-3 w-5 text-center"></i> Logout
                     </button>
                 </form>
@@ -49,7 +58,7 @@
         </aside>
 
         <div class="flex-1 flex flex-col w-full">
-            <header class="bg-white shadow-sm flex justify-between items-center p-4 lg:px-8 border-b border-gray-200">
+            <header class="bg-white shadow-sm flex justify-between items-center p-4 lg:px-8 border-b border-gray-200 header-animate">
                 <div class="flex items-center">
                     <button onclick="toggleSidebar()" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-4 md:hidden">
                         <i class="fas fa-bars text-xl"></i>
@@ -59,18 +68,26 @@
                     </h2>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <div class="text-right hidden sm:block">
+                    <div class="text-right hidden sm:block animate-fade-in">
                         <p class="text-sm font-bold text-gray-700">{{ Auth::user()->name }}</p>
                         <p class="text-xs text-blue-600 font-bold uppercase tracking-wider">Kurir Petugas</p>
                     </div>
                     <div
-                        class="w-10 h-10 bg-blue-600 border-2 border-white rounded-full flex items-center justify-center text-white font-bold shadow-md uppercase">
+                        class="w-10 h-10 bg-blue-600 border-2 border-white rounded-full flex items-center justify-center text-white font-bold shadow-md uppercase avatar-animate">
                         {{ substr(Auth::user()->name, 0, 1) }}
                     </div>
                 </div>
             </header>
 
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6 lg:p-10">
+                @if(session('success'))
+                    <div
+                        class="alert-animate bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded shadow-sm flex items-center">
+                        <i class="fas fa-check-circle text-xl mr-3"></i>
+                        <p class="font-medium">{{ session('success') }}</p>
+                    </div>
+                @endif
+
                 @yield('content')
             </main>
         </div>
@@ -84,8 +101,26 @@
             sidebar.classList.toggle('-translate-x-full');
             overlay.classList.toggle('hidden');
         }
+
+        // Ripple effect for buttons
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.btn-ripple');
+            if (!btn) return;
+
+            const circle = document.createElement('span');
+            const diameter = Math.max(btn.clientWidth, btn.clientHeight);
+            const radius = diameter / 2;
+
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${e.clientX - btn.getBoundingClientRect().left - radius}px`;
+            circle.style.top = `${e.clientY - btn.getBoundingClientRect().top - radius}px`;
+            circle.classList.add('ripple-effect');
+
+            const existing = btn.querySelector('.ripple-effect');
+            if (existing) existing.remove();
+            btn.appendChild(circle);
+        });
     </script>
 </body>
 
 </html>
-

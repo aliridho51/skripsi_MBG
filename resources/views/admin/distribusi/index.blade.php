@@ -30,7 +30,41 @@
                             <td class="px-6 py-4">{{ $d->petugas->user->name ?? '-' }}</td>
                             <td class="px-6 py-4">{{ \Carbon\Carbon::parse($d->tanggal)->translatedFormat('d F Y') }}</td>
                             <td class="px-6 py-4 font-medium">{{ $d->target_porsi }} Porsi</td>
-                            <td class="px-6 py-4 text-blue-600">{{ $d->status_pengiriman }}</td>
+                            <td class="px-6 py-4">
+                                @if($d->status_pengiriman === 'Belum Dikirim')
+                                    <span class="bg-gray-100 text-gray-800 text-xs font-bold px-2.5 py-1 rounded-full border border-gray-400 whitespace-nowrap">
+                                        <i class="fas fa-clock mr-1"></i> Belum Dikirim
+                                    </span>
+                                @elseif($d->status_pengiriman === 'Dalam Perjalanan')
+                                    <div class="flex flex-col gap-1">
+                                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded-full border border-blue-400 whitespace-nowrap inline-flex items-center">
+                                            <i class="fas fa-truck mr-1.5"></i> Sedang Dikirim
+                                        </span>
+                                        <div class="text-[10px] text-gray-500 font-semibold whitespace-nowrap">
+                                            Petugas <i class="fas fa-check-circle text-green-500 mx-0.5"></i> | Sekolah <i class="fas fa-hourglass-half text-yellow-500 ml-0.5"></i>
+                                        </div>
+                                    </div>
+                                @elseif($d->status_pengiriman === 'Selesai')
+                                    <div class="flex flex-col gap-1">
+                                        <span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded-full border border-green-400 whitespace-nowrap inline-flex items-center">
+                                            <i class="fas fa-check-double mr-1.5"></i> Selesai
+                                        </span>
+                                        <div class="text-[10px] text-gray-500 font-semibold whitespace-nowrap">
+                                            Petugas <i class="fas fa-check-circle text-green-500 mx-0.5"></i> | Sekolah <i class="fas fa-check-circle text-green-500 ml-0.5"></i>
+                                        </div>
+                                        @if($d->porsi_diterima !== null)
+                                            <div class="text-[10px] text-gray-600 mt-0.5 font-bold">
+                                                Diterima: {{ $d->porsi_diterima }} Porsi
+                                                @if($d->target_porsi > $d->porsi_diterima)
+                                                    <span class="text-red-500 block">(Kurang: {{ $d->target_porsi - $d->porsi_diterima }})</span>
+                                                @endif
+                                            </div>
+                                        @endif
+                                    </div>
+                                @else
+                                    <span class="bg-red-100 text-red-800 text-xs font-bold px-2.5 py-1 rounded-full border border-red-400">{{ $d->status_pengiriman }}</span>
+                                @endif
+                            </td>
                             <td class="px-6 py-4 text-right">
                                 <a href="{{ route('admin.distribusi.edit', $d->id) }}" class="text-blue-500 hover:text-blue-700 mr-3" title="Edit Data">
                                     <i class="fas fa-edit"></i>

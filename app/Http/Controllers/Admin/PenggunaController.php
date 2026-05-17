@@ -29,12 +29,35 @@ class PenggunaController extends Controller
             'role'     => 'required|in:admin,petugas,sekolah',
         ]);
 
-        User::create([
+        $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
             'role'     => $request->role,
         ]);
+
+        // Jika role yang dibuat adalah petugas, otomatis buat data profilnya
+        if ($user->role === 'petugas') {
+            \App\Models\Petugas::create([
+                'user_id'      => $user->id,
+                'kode_petugas' => 'PTG-' . str_pad($user->id, 4, '0', STR_PAD_LEFT),
+                'kendaraan'    => 'Belum Ditentukan',
+                'area_tugas'   => 'Belum Ditentukan',
+                'status'       => 'Aktif',
+            ]);
+        }
+
+        // Jika role yang dibuat adalah sekolah, otomatis buat data profilnya
+        if ($user->role === 'sekolah') {
+            \App\Models\Sekolah::create([
+                'user_id'          => $user->id,
+                'npsn'             => 'NPSN-' . substr(time(), -6) . $user->id,
+                'nama_sekolah'     => $user->name,
+                'alamat'           => 'Belum Ditentukan',
+                'penanggung_jawab' => $user->name,
+                'status'           => 'Aktif',
+            ]);
+        }
 
         return redirect()->route('admin.pengguna.index')
             ->with('success', 'Pengguna baru berhasil ditambahkan ke dalam sistem!');

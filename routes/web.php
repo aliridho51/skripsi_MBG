@@ -37,6 +37,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::put('/distribusi/{distribusi}', [App\Http\Controllers\Admin\DistribusiController::class, 'update'])->name('distribusi.update');
     Route::delete('/distribusi/{distribusi}', [App\Http\Controllers\Admin\DistribusiController::class, 'destroy'])->name('distribusi.destroy');
     Route::get('/laporan', [App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('/kritik-saran', [App\Http\Controllers\Admin\KritikSaranController::class, 'index'])->name('kritik-saran.index');
+    Route::get('/ompreng', [App\Http\Controllers\Admin\OmprengController::class, 'index'])->name('ompreng.index');
     Route::get('/pengguna', [App\Http\Controllers\Admin\PenggunaController::class, 'index'])->name('pengguna.index');
     Route::get('/pengguna/create', [App\Http\Controllers\Admin\PenggunaController::class, 'create'])->name('pengguna.create');
     Route::post('/pengguna', [App\Http\Controllers\Admin\PenggunaController::class, 'store'])->name('pengguna.store');
@@ -49,6 +51,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 /// ================= ROUTE PETUGAS (Dikunci khusus 'petugas') =================
 Route::prefix('petugas')->name('petugas.')->middleware(['auth', 'role:petugas'])->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Petugas\DashboardPetugasController::class, 'index'])->name('dashboard');
+    Route::get('/konfirmasi', [App\Http\Controllers\Petugas\DashboardPetugasController::class, 'halamanKonfirmasi'])->name('konfirmasi.halaman');
+    Route::post('/konfirmasi/{id}', [App\Http\Controllers\Petugas\DashboardPetugasController::class, 'konfirmasi'])->name('konfirmasi');
+    Route::post('/lapor-kendala/{id}', [App\Http\Controllers\Petugas\DashboardPetugasController::class, 'laporKendala'])->name('lapor-kendala');
     Route::get('/riwayat', [App\Http\Controllers\Petugas\DashboardPetugasController::class, 'riwayat'])->name('riwayat');
     Route::get('/profil', [App\Http\Controllers\Petugas\DashboardPetugasController::class, 'profil'])->name('profil');
 });
@@ -56,8 +61,13 @@ Route::prefix('petugas')->name('petugas.')->middleware(['auth', 'role:petugas'])
 // ================= ROUTE SEKOLAH (Dikunci khusus 'sekolah') =================
 Route::prefix('sekolah')->name('sekolah.')->middleware(['auth', 'role:sekolah'])->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Sekolah\DashboardSekolahController::class, 'index'])->name('dashboard');
+    Route::get('/tracking', [App\Http\Controllers\Sekolah\DashboardSekolahController::class, 'tracking'])->name('tracking');
     Route::get('/konfirmasi', [App\Http\Controllers\Sekolah\DashboardSekolahController::class, 'konfirmasi'])->name('konfirmasi');
     Route::post('/konfirmasi', [App\Http\Controllers\Sekolah\DashboardSekolahController::class, 'storeKonfirmasi'])->name('konfirmasi.store');
     Route::get('/riwayat', [App\Http\Controllers\Sekolah\DashboardSekolahController::class, 'riwayat'])->name('riwayat');
+    Route::get('/kritik-saran', [App\Http\Controllers\Sekolah\DashboardSekolahController::class, 'kritikSaran'])->name('kritik-saran');
+    Route::post('/kritik-saran', [App\Http\Controllers\Sekolah\DashboardSekolahController::class, 'storeKritikSaran'])->name('kritik-saran.store');
+    Route::get('/pengembalian-ompreng', [App\Http\Controllers\Sekolah\DashboardSekolahController::class, 'pengembalianOmpreng'])->name('pengembalian-ompreng');
+    Route::post('/pengembalian-ompreng', [App\Http\Controllers\Sekolah\DashboardSekolahController::class, 'storePengembalianOmpreng'])->name('pengembalian-ompreng.store');
     Route::get('/profil', [App\Http\Controllers\Sekolah\DashboardSekolahController::class, 'profil'])->name('profil');
 });

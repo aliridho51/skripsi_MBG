@@ -5,32 +5,32 @@
 @section('content')
     <!-- Statistik Ringkas Riwayat -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow p-6 flex border-l-4 border-slate-900">
+        <div class="stat-card bg-white rounded-lg shadow p-6 flex border-l-4 border-slate-900 animate-fade-in-up delay-1">
             <div class="flex-1">
                 <p class="text-sm text-gray-500 font-semibold uppercase tracking-wider">Total Riwayat Tugas</p>
-                <p class="text-3xl font-bold text-gray-800 mt-2">{{ count($riwayat_pengiriman) }} <span class="text-sm font-medium text-gray-400">Pengiriman Selesai</span></p>
+                <p class="text-3xl font-bold text-gray-800 mt-2 number-animate delay-3">{{ count($riwayat_pengiriman) }} <span class="text-sm font-medium text-gray-400">Pengiriman Selesai</span></p>
             </div>
-            <div class="text-slate-800 text-3xl flex items-center">
+            <div class="text-slate-800 text-3xl flex items-center stat-card-icon">
                 <i class="fas fa-clipboard-check"></i>
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6 flex border-l-4 border-blue-600">
+        <div class="stat-card bg-white rounded-lg shadow p-6 flex border-l-4 border-blue-600 animate-fade-in-up delay-2">
             <div class="flex-1">
                 <p class="text-sm text-gray-500 font-semibold uppercase tracking-wider">Total Porsi Tersalurkan</p>
                 @php
                     $total_porsi = $riwayat_pengiriman->sum('target_porsi');
                 @endphp
-                <p class="text-3xl font-bold text-gray-800 mt-2">{{ number_format($total_porsi, 0, ',', '.') }} <span class="text-sm font-medium text-gray-400">Porsi</span></p>
+                <p class="text-3xl font-bold text-gray-800 mt-2 number-animate delay-4">{{ number_format($total_porsi, 0, ',', '.') }} <span class="text-sm font-medium text-gray-400">Porsi</span></p>
             </div>
-            <div class="text-blue-600 text-3xl flex items-center">
+            <div class="text-blue-600 text-3xl flex items-center stat-card-icon">
                 <i class="fas fa-boxes"></i>
             </div>
         </div>
     </div>
 
     <!-- Daftar Riwayat -->
-    <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden animate-fade-in-up delay-3 card-hover">
         <div class="px-8 py-5 border-b border-gray-100 bg-slate-50 flex justify-between items-center">
             <h3 class="font-bold text-slate-800 text-lg">Catatan Distribusi Selesai</h3>
             <span class="text-xs bg-slate-200 text-slate-600 px-3 py-1 rounded-md font-bold uppercase tracking-widest">Update Otomatis</span>
@@ -48,8 +48,8 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
-                    @foreach($riwayat_pengiriman as $item)
-                    <tr class="hover:bg-blue-50 transition-colors">
+                    @foreach($riwayat_pengiriman as $index => $item)
+                    <tr class="table-row-animate animate-fade-in-up" style="animation-delay: {{ 0.4 + ($index * 0.08) }}s;">
                         <td class="px-8 py-5">
                             <div class="text-sm font-bold text-slate-800">{{ $item->updated_at->format('H:i') }} WIB</div>
                             <div class="text-[11px] text-slate-400 font-medium uppercase mt-0.5">{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}</div>
@@ -85,4 +85,3 @@
         </div>
     </div>
 @endsection
-

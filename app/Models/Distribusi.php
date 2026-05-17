@@ -22,4 +22,14 @@ class Distribusi extends Model
     {
         return $this->belongsTo(Petugas::class);
     }
+
+    public function pengembalianOmpreng()
+    {
+        return $this->hasOne(PengembalianOmpreng::class);
+    }
+
+    public function kritikSaran()
+    {
+        return $this->hasMany(KritikSaran::class);
+    }
 }

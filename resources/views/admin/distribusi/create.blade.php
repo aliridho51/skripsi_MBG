@@ -34,7 +34,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('admin.distribusi.store') }}" method="POST">
+            <form action="{{ route('admin.distribusi.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -87,6 +87,22 @@
                         placeholder="Contoh: Nasi, Ayam Teriyaki, Sayur Sop, Susu, Buah Pisang">{{ old('menu_hari_ini') }}</textarea>
                 </div>
 
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Foto Menu <span class="text-gray-400 font-normal">(opsional)</span></label>
+                    <label for="foto_menu" class="border-2 border-dashed border-gray-300 rounded-lg p-6 flex justify-center items-center bg-gray-50 hover:bg-gray-100 cursor-pointer transition relative">
+                        <input type="file" name="foto_menu" id="foto_menu" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewFotoMenu(this)">
+                        <div class="text-center" id="fotoMenuPlaceholder">
+                            <i class="fas fa-image text-3xl text-gray-400 mb-2"></i>
+                            <p class="text-sm text-gray-500">Klik untuk upload foto menu hari ini</p>
+                            <p class="text-xs text-gray-400 mt-1">Format: JPG, PNG (maks. 2MB)</p>
+                        </div>
+                        <div class="text-center hidden" id="fotoMenuPreview">
+                            <img id="fotoMenuImg" src="" alt="Preview" class="max-h-40 rounded-lg mx-auto mb-2">
+                            <p class="text-xs text-blue-600 font-semibold">Klik untuk mengganti foto</p>
+                        </div>
+                    </label>
+                </div>
+
                 <div class="border-t border-gray-200 mt-6 pt-6 flex justify-between items-center">
                     <a href="{{ route('admin.distribusi.index') }}"
                         class="px-4 py-2 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 inline-flex items-center">
@@ -100,4 +116,21 @@
             </form>
         </div>
     </div>
+    <script>
+    function previewFotoMenu(input) {
+        const placeholder = document.getElementById('fotoMenuPlaceholder');
+        const preview = document.getElementById('fotoMenuPreview');
+        const img = document.getElementById('fotoMenuImg');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                img.src = e.target.result;
+                placeholder.classList.add('hidden');
+                preview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    </script>
 @endsection
+
