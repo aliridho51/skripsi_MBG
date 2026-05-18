@@ -22,7 +22,7 @@ class DashboardController extends Controller
         $persentase_harian  = $target_porsi > 0 ? round(($porsi_hari_ini / $target_porsi) * 100, 1) : 0;
 
         $data = [
-            'total_penerima'      => Sekolah::sum('id') > 0 ? Distribusi::sum('target_porsi') : 0,
+            'total_penerima'      => $total_sekolah,
             'tersalurkan_hari_ini'=> $porsi_hari_ini,
             'target_hari_ini'     => $target_porsi ?: $total_sekolah,
             'titik_distribusi'    => $total_sekolah,
