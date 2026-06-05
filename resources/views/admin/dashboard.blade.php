@@ -72,7 +72,7 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 text-gray-700">
-                    @foreach($recent_activities as $index => $activity)
+                    @forelse($recent_activities as $index => $activity)
                         <tr class="table-row-animate animate-fade-in-up" style="animation-delay: {{ 0.5 + ($index * 0.08) }}s;">
                             <td class="px-6 py-4">{{ $activity->updated_at ? $activity->updated_at->format('H:i') : '-' }} WIB</td>
                             <td class="px-6 py-4 font-medium">{{ $activity->sekolah->nama_sekolah ?? '-' }}</td>
@@ -105,7 +105,19 @@
                                 @endif
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="4" class="px-6 py-16 text-center text-gray-500">
+                                <div class="flex flex-col items-center justify-center animate-fade-in">
+                                    <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-4 border border-blue-100">
+                                        <i class="fas fa-clipboard-list text-3xl text-blue-400"></i>
+                                    </div>
+                                    <p class="font-bold text-slate-700 text-xl mb-1">Belum Ada Aktivitas</p>
+                                    <p class="text-sm text-slate-500">Belum ada pergerakan penyaluran Makanan Bergizi Gratis (MBG) yang dicatat hari ini.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
