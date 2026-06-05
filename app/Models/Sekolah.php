@@ -18,4 +18,9 @@ class Sekolah extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function distribusi()
+    {
+        return $this->hasMany(Distribusi::class);
+    }
 }

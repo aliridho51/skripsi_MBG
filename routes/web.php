@@ -38,6 +38,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::delete('/distribusi/{distribusi}', [App\Http\Controllers\Admin\DistribusiController::class, 'destroy'])->name('distribusi.destroy');
     Route::get('/laporan', [App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('laporan.index');
     Route::get('/kritik-saran', [App\Http\Controllers\Admin\KritikSaranController::class, 'index'])->name('kritik-saran.index');
+    Route::get('/monitoring', [App\Http\Controllers\Admin\MonitoringController::class, 'index'])->name('monitoring.index');
+    Route::get('/monitoring/chart-data', [App\Http\Controllers\Admin\MonitoringController::class, 'chartData'])->name('monitoring.chart-data');
     Route::get('/ompreng', [App\Http\Controllers\Admin\OmprengController::class, 'index'])->name('ompreng.index');
     Route::get('/pengguna', [App\Http\Controllers\Admin\PenggunaController::class, 'index'])->name('pengguna.index');
     Route::get('/pengguna/create', [App\Http\Controllers\Admin\PenggunaController::class, 'create'])->name('pengguna.create');

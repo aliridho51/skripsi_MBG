@@ -49,6 +49,10 @@
                 
                 <div class="my-4 border-t border-slate-700"></div>
                 <p class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Monitoring</p>
+                <a href="{{ route('admin.monitoring.index') }}"
+                    class="sidebar-nav-link block px-4 py-2 rounded {{ request()->routeIs('admin.monitoring.*') ? 'bg-blue-600 text-white sidebar-active-link' : 'text-gray-300 hover:bg-slate-800 hover:text-white' }}">
+                    <i class="fas fa-chart-line mr-2 w-5 text-center"></i> Grafik Monitoring
+                </a>
                 <a href="{{ route('admin.ompreng.index') }}"
                     class="sidebar-nav-link block px-4 py-2 rounded {{ request()->routeIs('admin.ompreng.*') ? 'bg-blue-600 text-white sidebar-active-link' : 'text-gray-300 hover:bg-slate-800 hover:text-white' }}">
                     <i class="fas fa-box-open mr-2 w-5 text-center"></i> Logistik Ompreng
