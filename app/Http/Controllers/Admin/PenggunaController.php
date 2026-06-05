@@ -87,6 +87,29 @@ class PenggunaController extends Controller
 
         $user->save();
 
+        // Jika role diubah ke petugas dan belum ada profilnya, otomatis buat
+        if ($user->role === 'petugas' && !$user->petugas()->exists()) {
+            \App\Models\Petugas::create([
+                'user_id'      => $user->id,
+                'kode_petugas' => 'PTG-' . str_pad($user->id, 4, '0', STR_PAD_LEFT),
+                'kendaraan'    => 'Belum Ditentukan',
+                'area_tugas'   => 'Belum Ditentukan',
+                'status'       => 'Aktif',
+            ]);
+        }
+
+        // Jika role diubah ke sekolah dan belum ada profilnya, otomatis buat
+        if ($user->role === 'sekolah' && !$user->sekolah()->exists()) {
+            \App\Models\Sekolah::create([
+                'user_id'          => $user->id,
+                'npsn'             => 'NPSN-' . substr(time(), -6) . $user->id,
+                'nama_sekolah'     => $user->name,
+                'alamat'           => 'Belum Ditentukan',
+                'penanggung_jawab' => $user->name,
+                'status'           => 'Aktif',
+            ]);
+        }
+
         return redirect()->route('admin.pengguna.index')
             ->with('success', 'Data pengguna "' . $user->name . '" berhasil diperbarui!');
     }
