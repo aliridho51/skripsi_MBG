@@ -38,8 +38,23 @@ class DashboardPetugasController extends Controller
         return view('petugas.dashboard', compact('tugas_aktif', 'petugas'));
     }
 
-    public function halamanKonfirmasi()
+    public function halamanKonfirmasi(Request $request)
     {
+        // Fitur Keamanan Ekstra: Paksa login ulang jika waktu login sudah lewat dari 5 menit (300 detik)
+        $authTime = $request->session()->get('auth_time', 0);
+        if (time() - $authTime > 300) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            
+            // Simpan rute ini sebagai tujuan setelah login berhasil
+            $request->session()->put('url.intended', route('petugas.konfirmasi.halaman'));
+            
+            return redirect('/login')->withErrors([
+                'email' => 'Akses dilindungi. Silakan login kembali demi keamanan sistem.'
+            ]);
+        }
+
         $user    = Auth::user();
         $petugas = Petugas::where('user_id', $user->id)->first();
 

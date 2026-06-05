@@ -27,7 +27,17 @@ class AuthController extends Controller
 
         if (Auth::attempt($kredensial)) {
             $request->session()->regenerate();
-            return $this->redirectBerdasarkanRole();
+            $request->session()->put('auth_time', time());
+
+            // Dapatkan rute default berdasarkan role
+            $role = Auth::user()->role;
+            $defaultRoute = '/';
+            if ($role === 'admin') $defaultRoute = route('admin.dashboard');
+            elseif ($role === 'petugas') $defaultRoute = route('petugas.dashboard');
+            elseif ($role === 'sekolah') $defaultRoute = route('sekolah.dashboard');
+
+            // Redirect ke halaman yang dituju sebelumnya jika ada, atau ke dashboard
+            return redirect()->intended($defaultRoute);
         }
 
         // Jika salah, kembalikan ke halaman login bawa pesan error
