@@ -76,7 +76,7 @@ class DashboardSekolahController extends Controller
     {
         $request->validate([
             'jumlah_diterima' => 'required|numeric|min:0',
-            'foto_bukti'      => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'foto_bukti'      => 'required|image|mimes:jpeg,png,jpg|max:20480',
         ]);
 
         $user    = Auth::user();
@@ -241,7 +241,7 @@ class DashboardSekolahController extends Controller
             'jumlah_rusak'   => 'required|integer|min:0',
             'kondisi'        => 'required|in:Baik Semua,Sebagian Rusak,Banyak Rusak',
             'catatan'        => 'nullable|string|max:1000',
-            'foto_kondisi'   => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'foto_kondisi'   => 'nullable|image|mimes:jpeg,png,jpg|max:20480',
         ]);
 
         $user    = Auth::user();

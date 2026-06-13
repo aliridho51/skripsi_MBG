@@ -31,7 +31,7 @@ class DistribusiController extends Controller
             'tanggal'      => 'required|date',
             'target_porsi' => 'required|integer|min:1',
             'menu_hari_ini'=> 'nullable|string',
-            'foto_menu'    => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'foto_menu'    => 'nullable|image|mimes:jpeg,png,jpg|max:20480',
         ]);
 
         $data = [
@@ -71,7 +71,7 @@ class DistribusiController extends Controller
             'tanggal'      => 'required|date',
             'target_porsi' => 'required|integer|min:1',
             'menu_hari_ini'=> 'nullable|string',
-            'foto_menu'    => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'foto_menu'    => 'nullable|image|mimes:jpeg,png,jpg|max:20480',
         ]);
 
         $data = [
