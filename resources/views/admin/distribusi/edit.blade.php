@@ -72,18 +72,26 @@
 
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Foto Menu <span class="text-gray-400 font-normal">(opsional)</span></label>
-                    @if($distribusi->foto_menu)
-                    <div class="mb-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                        <p class="text-xs text-gray-500 mb-2 font-medium">Foto saat ini:</p>
-                        <img src="{{ asset($distribusi->foto_menu) }}" alt="Foto Menu" class="max-h-40 rounded-lg">
+                    @php
+                        $editFotoSrc = null;
+                        if ($distribusi->foto_menu_data) {
+                            $editFotoSrc = $distribusi->foto_menu_data;
+                        } elseif ($distribusi->foto_menu && file_exists(public_path($distribusi->foto_menu))) {
+                            $editFotoSrc = asset($distribusi->foto_menu);
+                        }
+                    @endphp
+                    @if($editFotoSrc)
+                    <div class="mb-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                        <p class="text-xs text-green-700 mb-2 font-bold"><i class="fas fa-check-circle mr-1"></i>Foto menu saat ini (tetap tersimpan jika tidak upload baru):</p>
+                        <img src="{{ $editFotoSrc }}" alt="Foto Menu" class="max-h-48 rounded-lg shadow-sm">
                     </div>
                     @endif
                     <label for="foto_menu" class="border-2 border-dashed border-gray-300 rounded-lg p-6 flex justify-center items-center bg-gray-50 hover:bg-gray-100 cursor-pointer transition relative">
                         <input type="file" name="foto_menu" id="foto_menu" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewFotoMenu(this)">
                         <div class="text-center" id="fotoMenuPlaceholder">
                             <i class="fas fa-image text-3xl text-gray-400 mb-2"></i>
-                            <p class="text-sm text-gray-500">{{ $distribusi->foto_menu ? 'Klik untuk mengganti foto' : 'Klik untuk upload foto menu' }}</p>
-                            <p class="text-xs text-gray-400 mt-1">Format: JPG, PNG (maks. 2MB)</p>
+                            <p class="text-sm text-gray-500">{{ ($distribusi->foto_menu_data || $distribusi->foto_menu) ? 'Klik untuk mengganti foto' : 'Klik untuk upload foto menu' }}</p>
+                            <p class="text-xs text-gray-400 mt-1">Format: JPG, PNG (maks. 20MB)</p>
                         </div>
                         <div class="text-center hidden" id="fotoMenuPreview">
                             <img id="fotoMenuImg" src="" alt="Preview" class="max-h-40 rounded-lg mx-auto mb-2">
