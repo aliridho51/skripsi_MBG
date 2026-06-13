@@ -48,6 +48,8 @@ class DistribusiController extends Controller
             $filename = time() . '_menu_' . $file->getClientOriginalName();
             $file->move(public_path('uploads/foto_menu'), $filename);
             $data['foto_menu'] = 'uploads/foto_menu/' . $filename;
+            // Simpan juga sebagai base64 agar tidak hilang saat redeploy di Railway
+            $data['foto_menu_data'] = 'data:' . $file->getClientMimeType() . ';base64,' . base64_encode(file_get_contents(public_path($data['foto_menu'])));
         }
 
         Distribusi::create($data);
@@ -87,6 +89,8 @@ class DistribusiController extends Controller
             $filename = time() . '_menu_' . $file->getClientOriginalName();
             $file->move(public_path('uploads/foto_menu'), $filename);
             $data['foto_menu'] = 'uploads/foto_menu/' . $filename;
+            // Simpan juga sebagai base64 agar tidak hilang saat redeploy di Railway
+            $data['foto_menu_data'] = 'data:' . $file->getClientMimeType() . ';base64,' . base64_encode(file_get_contents(public_path($data['foto_menu'])));
         }
 
         $distribusi->update($data);

@@ -16,13 +16,16 @@
                     </div>
                     <div class="relative overflow-hidden group">
                         @php
-                            $fotoMenuPath = $distribusi_hari_ini->foto_menu;
-                            // Fallback jika file fisik tidak ditemukan di server (misal karena redeploy di Railway)
-                            if (!file_exists(public_path($fotoMenuPath)) && !str_starts_with($fotoMenuPath, 'http')) {
-                                $fotoMenuPath = 'images/default_menu.png';
+                            // Prioritas: gunakan base64 dari DB agar foto tidak hilang saat redeploy Railway
+                            if ($distribusi_hari_ini->foto_menu_data) {
+                                $fotoMenuSrc = $distribusi_hari_ini->foto_menu_data;
+                            } elseif ($distribusi_hari_ini->foto_menu && file_exists(public_path($distribusi_hari_ini->foto_menu))) {
+                                $fotoMenuSrc = asset($distribusi_hari_ini->foto_menu);
+                            } else {
+                                $fotoMenuSrc = asset('images/default_menu.png');
                             }
                         @endphp
-                        <img src="{{ asset($fotoMenuPath) }}"
+                        <img src="{{ $fotoMenuSrc }}"
                              alt="Foto Menu Hari Ini"
                              class="w-full max-h-64 object-cover cursor-pointer transition-transform duration-500 group-hover:scale-105"
                              onclick="openImageModal(this.src)"

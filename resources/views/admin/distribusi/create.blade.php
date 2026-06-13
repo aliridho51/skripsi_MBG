@@ -94,7 +94,7 @@
                         <div class="text-center" id="fotoMenuPlaceholder">
                             <i class="fas fa-image text-3xl text-gray-400 mb-2"></i>
                             <p class="text-sm text-gray-500">Klik untuk upload foto menu hari ini</p>
-                            <p class="text-xs text-gray-400 mt-1">Format: JPG, PNG (maks. 2MB)</p>
+                            <p class="text-xs text-gray-400 mt-1">Format: JPG, PNG (maks. 20MB)</p>
                         </div>
                         <div class="text-center hidden" id="fotoMenuPreview">
                             <img id="fotoMenuImg" src="" alt="Preview" class="max-h-40 rounded-lg mx-auto mb-2">

@@ -15,12 +15,13 @@
             <table class="w-full whitespace-nowrap text-left">
                 <thead class="bg-gray-50 text-gray-600 text-sm uppercase font-semibold">
                     <tr>
-                        <th class="px-6 py-3 w-1/5">Sekolah Tujuan</th>
-                        <th class="px-6 py-3 w-1/5">Petugas / Kurir</th>
-                        <th class="px-6 py-3 w-1/5">Tanggal</th>
-                        <th class="px-6 py-3 w-1/5">Target Porsi</th>
-                        <th class="px-6 py-3 w-1/5">Status</th>
-                        <th class="px-6 py-3 w-1/5 text-right">Aksi</th>
+                        <th class="px-6 py-3 w-1/6">Sekolah Tujuan</th>
+                        <th class="px-6 py-3 w-1/6">Petugas / Kurir</th>
+                        <th class="px-6 py-3 w-1/6">Tanggal</th>
+                        <th class="px-6 py-3 w-1/6">Target Porsi</th>
+                        <th class="px-6 py-3 w-1/6">Foto Menu</th>
+                        <th class="px-6 py-3 w-1/6">Status</th>
+                        <th class="px-6 py-3 w-1/6 text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 text-gray-700">
@@ -30,6 +31,21 @@
                             <td class="px-6 py-4">{{ $d->petugas->user->name ?? '-' }}</td>
                             <td class="px-6 py-4">{{ \Carbon\Carbon::parse($d->tanggal)->translatedFormat('d F Y') }}</td>
                             <td class="px-6 py-4 font-medium">{{ $d->target_porsi }} Porsi</td>
+                            <td class="px-6 py-4">
+                                @php
+                                    $fotoMenuSrc = null;
+                                    if ($d->foto_menu_data) {
+                                        $fotoMenuSrc = $d->foto_menu_data;
+                                    } elseif ($d->foto_menu && file_exists(public_path($d->foto_menu))) {
+                                        $fotoMenuSrc = asset($d->foto_menu);
+                                    }
+                                @endphp
+                                @if($fotoMenuSrc)
+                                    <img src="{{ $fotoMenuSrc }}" alt="Foto Menu" class="h-12 w-16 object-cover rounded cursor-pointer border border-gray-200 hover:opacity-80 transition" onclick="openFotoModal('{{ addslashes($fotoMenuSrc) }}')">
+                                @else
+                                    <span class="text-gray-400 text-xs italic">Tidak ada foto</span>
+                                @endif
+                            </td>
                             <td class="px-6 py-4">
                                 @if($d->status_pengiriman === 'Belum Dikirim')
                                     <span class="bg-gray-100 text-gray-800 text-xs font-bold px-2.5 py-1 rounded-full border border-gray-400 whitespace-nowrap">
@@ -80,7 +96,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-10 text-center text-gray-400">
+                            <td colspan="7" class="px-6 py-10 text-center text-gray-400">
                                 <i class="fas fa-calendar-alt text-3xl mb-2 block"></i>
                                 Belum ada jadwal distribusi.
                             </td>
@@ -90,4 +106,27 @@
             </table>
         </div>
     </div>
+
+    {{-- Modal Foto Menu --}}
+    <div id="fotoModal" class="fixed inset-0 bg-black/80 z-[100] hidden items-center justify-center p-4" onclick="closeFotoModal()">
+        <div class="relative max-w-2xl w-full">
+            <button onclick="closeFotoModal()" class="absolute -top-10 right-0 text-white text-2xl hover:text-red-400 transition">
+                <i class="fas fa-times"></i>
+            </button>
+            <img id="fotoModalImg" src="" alt="Foto Menu" class="w-full rounded-xl shadow-2xl">
+        </div>
+    </div>
+    <script>
+    function openFotoModal(src) {
+        document.getElementById('fotoModalImg').src = src;
+        const modal = document.getElementById('fotoModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+    function closeFotoModal() {
+        const modal = document.getElementById('fotoModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+    </script>
 @endsection

@@ -100,6 +100,8 @@ class DashboardSekolahController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('uploads/bukti_terima'), $filename);
             $distribusi->foto_bukti = 'uploads/bukti_terima/' . $filename;
+            // Simpan juga sebagai base64 agar tidak hilang saat redeploy di Railway
+            $distribusi->foto_bukti_data = 'data:' . $file->getClientMimeType() . ';base64,' . base64_encode(file_get_contents(public_path($distribusi->foto_bukti)));
         }
 
         $distribusi->porsi_diterima = $request->jumlah_diterima;
