@@ -10,18 +10,13 @@
     <link href="{{ asset('css/animations.css') }}?v={{ time() }}" rel="stylesheet">
 </head>
 
-<body class="login-bg-animate h-screen flex items-center justify-center overflow-hidden relative">
+<body class="bg-slate-50 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
 
-    <!-- Decorative floating shapes -->
-    <div class="absolute top-20 left-20 w-32 h-32 bg-blue-200/20 rounded-full blur-xl" style="animation: particleFloat1 18s ease-in-out infinite;"></div>
-    <div class="absolute bottom-20 right-20 w-40 h-40 bg-indigo-200/20 rounded-full blur-xl" style="animation: particleFloat2 14s ease-in-out infinite;"></div>
-    <div class="absolute top-1/3 right-1/4 w-24 h-24 bg-purple-200/15 rounded-full blur-lg" style="animation: particleFloat1 20s ease-in-out infinite reverse;"></div>
-
-    <div class="bg-white/80 backdrop-blur-lg p-8 rounded-2xl shadow-xl w-full max-w-md border border-white/50 login-card-glow animate-fade-in-scale relative z-10">
+    <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-200/80 w-full max-w-md animate-fade-in-scale relative">
         <div class="text-center mb-8">
-            <img src="{{ asset('logo_mbg.svg') }}" alt="Logo MBG" class="w-24 h-24 mx-auto mb-5 login-icon-float drop-shadow-md">
+            <img src="{{ asset('logo_mbg.svg') }}" alt="Logo MBG" class="w-20 h-20 mx-auto mb-4 drop-shadow-sm">
             <h1 class="text-2xl font-bold text-slate-800 animate-fade-in-up delay-1">Sistem Distribusi MBG</h1>
-            <p class="text-slate-500 text-sm mt-2 animate-fade-in-up delay-2">Silakan masuk ke akun Anda</p>
+            <p class="text-slate-500 text-sm mt-1 animate-fade-in-up delay-2">Silakan masuk ke akun Anda</p>
         </div>
 
         @if($errors->any())
@@ -35,23 +30,23 @@
         <form action="{{ route('login.post') }}" method="POST">
             @csrf
             <div class="mb-5 animate-fade-in-up delay-3">
-                <label class="block text-sm font-bold text-slate-700 mb-2">Alamat Email</label>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Alamat Email</label>
                 <div class="relative group">
-                    <i class="fas fa-envelope absolute left-4 top-3.5 text-slate-400 transition-colors group-focus-within:text-blue-500"></i>
+                    <i class="fas fa-envelope absolute left-4 top-3.5 text-slate-400 transition-colors group-focus-within:text-emerald-600"></i>
                     <input type="email" name="email" required
-                        class="input-animate w-full pl-11 pr-4 py-3 bg-slate-50/50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition"
+                        class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:bg-white transition duration-200"
                         placeholder="contoh@mbg.com">
                 </div>
             </div>
 
-            <div class="mb-8 animate-fade-in-up delay-4">
-                <label class="block text-sm font-bold text-slate-700 mb-2">Kata Sandi</label>
+            <div class="mb-6 animate-fade-in-up delay-4">
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Kata Sandi</label>
                 <div class="relative group">
-                    <i class="fas fa-lock absolute left-4 top-3.5 text-slate-400 transition-colors group-focus-within:text-blue-500"></i>
+                    <i class="fas fa-lock absolute left-4 top-3.5 text-slate-400 transition-colors group-focus-within:text-emerald-600"></i>
                     <input type="password" name="password" required id="passwordField"
-                        class="input-animate w-full pl-11 pr-12 py-3 bg-slate-50/50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition"
+                        class="w-full pl-11 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:bg-white transition duration-200"
                         placeholder="••••••••">
-                    <button type="button" onclick="togglePassword()" class="absolute right-4 top-3.5 text-slate-400 hover:text-blue-500 transition">
+                    <button type="button" onclick="togglePassword()" class="absolute right-4 top-3.5 text-slate-400 hover:text-emerald-600 transition">
                         <i class="fas fa-eye" id="toggleIcon"></i>
                     </button>
                 </div>
@@ -59,7 +54,7 @@
 
             <div class="animate-fade-in-up delay-5">
                 <button type="submit"
-                    class="btn-animate btn-ripple w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg flex justify-center items-center">
+                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3.5 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex justify-center items-center active:scale-[0.98]">
                     <i class="fas fa-sign-in-alt mr-2"></i> Masuk Sistem
                 </button>
             </div>
