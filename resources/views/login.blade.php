@@ -19,9 +19,7 @@
 
     <div class="bg-white/80 backdrop-blur-lg p-8 rounded-2xl shadow-xl w-full max-w-md border border-white/50 login-card-glow animate-fade-in-scale relative z-10">
         <div class="text-center mb-8">
-            <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-lg login-icon-float">
-                <i class="fas fa-utensils text-3xl text-white"></i>
-            </div>
+            <img src="{{ asset('logo_mbg.svg') }}" alt="Logo MBG" class="w-24 h-24 mx-auto mb-5 login-icon-float drop-shadow-md">
             <h1 class="text-2xl font-bold text-slate-800 animate-fade-in-up delay-1">Sistem Distribusi MBG</h1>
             <p class="text-slate-500 text-sm mt-2 animate-fade-in-up delay-2">Silakan masuk ke akun Anda</p>
         </div>
