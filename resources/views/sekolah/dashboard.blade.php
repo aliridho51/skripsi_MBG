@@ -8,7 +8,7 @@
                 <p class="text-slate-500 mb-4">{{ $info_hari_ini['tanggal'] }}</p>
 
                 {{-- Foto Menu Hari Ini --}}
-                @if($distribusi_hari_ini && $distribusi_hari_ini->foto_menu)
+                @if($distribusi_hari_ini && ($distribusi_hari_ini->foto_menu_data || $distribusi_hari_ini->foto_menu))
                 <div class="mb-5 rounded-xl overflow-hidden border border-slate-200 shadow-sm animate-fade-in-up delay-2">
                     <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2.5 flex items-center">
                         <i class="fas fa-utensils text-white mr-2"></i>
@@ -118,5 +118,28 @@
         modal.classList.add('hidden');
         modal.classList.remove('flex');
     }
+
+    // Auto-refresh dashboard setiap 30 detik ketika pengiriman sedang aktif
+    @if($distribusi_hari_ini && in_array($distribusi_hari_ini->status_pengiriman, ['Belum Dikirim', 'Dalam Perjalanan']))
+    let dashboardCountdown = 30;
+    const dashBadge = document.createElement('div');
+    dashBadge.innerHTML = `
+        <div id="dashRefreshBar" class="fixed bottom-4 right-4 z-50 bg-slate-800/90 text-white text-xs font-bold px-4 py-2.5 rounded-full shadow-lg flex items-center gap-2 backdrop-blur-sm">
+            <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse inline-block"></span>
+            <span>Live &bull; Update dalam <span id="dashCountdown">30</span>s</span>
+            <button onclick="location.reload()" class="ml-1 bg-blue-500 hover:bg-blue-400 text-white text-[10px] px-2 py-0.5 rounded-full transition">Refresh</button>
+        </div>`;
+    document.body.appendChild(dashBadge);
+
+    const dashInterval = setInterval(() => {
+        dashboardCountdown--;
+        const el = document.getElementById('dashCountdown');
+        if (el) el.textContent = dashboardCountdown;
+        if (dashboardCountdown <= 0) {
+            clearInterval(dashInterval);
+            location.reload();
+        }
+    }, 1000);
+    @endif
     </script>
 @endsection

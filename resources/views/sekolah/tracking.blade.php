@@ -267,7 +267,15 @@
         </div>
 
         {{-- Foto Menu Section --}}
-        @if($distribusi->foto_menu)
+        @php
+            $fotoMenuSrcTracking = null;
+            if ($distribusi->foto_menu_data) {
+                $fotoMenuSrcTracking = $distribusi->foto_menu_data;
+            } elseif ($distribusi->foto_menu && file_exists(public_path($distribusi->foto_menu))) {
+                $fotoMenuSrcTracking = asset($distribusi->foto_menu);
+            }
+        @endphp
+        @if($fotoMenuSrcTracking)
         <div class="px-6 pb-6 animate-fade-in-up delay-5">
             <div class="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden card-hover">
                 <div class="px-4 py-3 border-b border-slate-200 flex items-center">
@@ -275,14 +283,7 @@
                     <h4 class="font-bold text-sm text-slate-700">Foto Menu Hari Ini</h4>
                 </div>
                 <div class="p-4 relative overflow-hidden group">
-                    @php
-                        $fotoMenuPath = $distribusi->foto_menu;
-                        // Fallback jika file fisik tidak ditemukan di server (misal karena redeploy di Railway)
-                        if (!file_exists(public_path($fotoMenuPath)) && !str_starts_with($fotoMenuPath, 'http')) {
-                            $fotoMenuPath = 'images/default_menu.png';
-                        }
-                    @endphp
-                    <img src="{{ asset($fotoMenuPath) }}"
+                    <img src="{{ $fotoMenuSrcTracking }}"
                          alt="Foto Menu MBG"
                          class="w-full max-h-64 object-cover rounded-lg shadow-sm border border-slate-200 cursor-pointer transition-transform duration-500 group-hover:scale-105"
                          onclick="openImageModal(this.src)"
@@ -296,7 +297,15 @@
         @endif
 
         {{-- Foto Bukti Section --}}
-        @if($distribusi->foto_bukti)
+        @php
+            $fotoBuktiSrcTracking = null;
+            if ($distribusi->foto_bukti_data) {
+                $fotoBuktiSrcTracking = $distribusi->foto_bukti_data;
+            } elseif ($distribusi->foto_bukti && file_exists(public_path($distribusi->foto_bukti))) {
+                $fotoBuktiSrcTracking = asset($distribusi->foto_bukti);
+            }
+        @endphp
+        @if($fotoBuktiSrcTracking)
         <div class="px-6 pb-6 animate-fade-in-up delay-6">
             <div class="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden card-hover">
                 <div class="px-4 py-3 border-b border-slate-200 flex items-center">
@@ -304,7 +313,7 @@
                     <h4 class="font-bold text-sm text-slate-700">Foto Bukti Penerimaan</h4>
                 </div>
                 <div class="p-4 relative overflow-hidden group">
-                    <img src="{{ asset($distribusi->foto_bukti) }}"
+                    <img src="{{ $fotoBuktiSrcTracking }}"
                          alt="Bukti Penerimaan MBG"
                          class="w-full rounded-lg shadow-sm border border-slate-200 cursor-pointer transition-transform duration-500 group-hover:scale-105"
                          onclick="openImageModal(this.src)"
@@ -365,6 +374,30 @@
         modal.classList.add('hidden');
         modal.classList.remove('flex');
     }
+
+    // ── Auto Refresh: halaman tracking otomatis refresh setiap 30 detik ──
+    // Ini supaya ketika petugas konfirmasi pengiriman, sekolah langsung melihat updatenya
+    @if($distribusi && in_array($distribusi->status_pengiriman, ['Belum Dikirim', 'Dalam Perjalanan']))
+    let autoRefreshCountdown = 30;
+    const refreshBadge = document.createElement('div');
+    refreshBadge.innerHTML = `
+        <div id="autoRefreshBar" class="fixed bottom-4 right-4 z-50 bg-slate-800/90 text-white text-xs font-bold px-4 py-2.5 rounded-full shadow-lg flex items-center gap-2 backdrop-blur-sm">
+            <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse inline-block"></span>
+            <span>Live &bull; Update dalam <span id="countdownNum">30</span>s</span>
+            <button onclick="location.reload()" class="ml-1 bg-blue-500 hover:bg-blue-400 text-white text-[10px] px-2 py-0.5 rounded-full transition">Refresh</button>
+        </div>`;
+    document.body.appendChild(refreshBadge);
+
+    const countdownInterval = setInterval(() => {
+        autoRefreshCountdown--;
+        const el = document.getElementById('countdownNum');
+        if (el) el.textContent = autoRefreshCountdown;
+        if (autoRefreshCountdown <= 0) {
+            clearInterval(countdownInterval);
+            location.reload();
+        }
+    }, 1000);
+    @endif
 
     @if($distribusi)
     // Leaflet Map Initialization
