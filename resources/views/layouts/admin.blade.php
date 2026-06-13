@@ -23,7 +23,7 @@
 
         <aside id="sidebar" class="w-64 bg-slate-900 text-white flex flex-col fixed inset-y-0 left-0 z-50 transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out">
             <div class="p-6 flex items-center justify-center border-b border-slate-700">
-                <i class="fas fa-shield-alt text-2xl mr-3 text-blue-400 animate-float"></i>
+                <img src="{{ asset('logo_mbg.svg') }}" alt="Logo MBG" class="w-8 h-8 mr-3">
                 <span class="text-2xl font-bold sidebar-logo">MBG Admin</span>
             </div>
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
