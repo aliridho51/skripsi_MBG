@@ -157,4 +157,41 @@ class DashboardPetugasController extends Controller
 
         return view('petugas.profil', compact('user', 'petugas'));
     }
+
+    public function selesaiKirim(Request $request, $id)
+    {
+        $request->validate([
+            'jumlah_diterima' => 'required|numeric|min:0',
+            'foto_bukti'      => 'required|image|mimes:jpeg,png,jpg|max:20480',
+        ]);
+
+        $user    = Auth::user();
+        $petugas = Petugas::where('user_id', $user->id)->first();
+
+        if (!$petugas) {
+            return redirect()->back()->with('error', 'Data petugas tidak ditemukan.');
+        }
+
+        $distribusi = Distribusi::where('id', $id)
+            ->where('petugas_id', $petugas->id)
+            ->first();
+
+        if (!$distribusi) {
+            return redirect()->back()->with('error', 'Tugas tidak ditemukan.');
+        }
+
+        if ($request->hasFile('foto_bukti')) {
+            $file = $request->file('foto_bukti');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/bukti_terima'), $filename);
+            $distribusi->foto_bukti = 'uploads/bukti_terima/' . $filename;
+        }
+
+        $distribusi->porsi_diterima = $request->jumlah_diterima;
+        $distribusi->status_pengiriman = 'Selesai';
+        $distribusi->waktu_tiba = \Carbon\Carbon::parse($distribusi->tanggal)->setTimeFrom(now());
+        $distribusi->save();
+
+        return redirect()->route('petugas.riwayat')->with('success', 'Konfirmasi pengiriman berhasil diselesaikan.');
+    }
 }

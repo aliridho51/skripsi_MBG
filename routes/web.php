@@ -56,6 +56,7 @@ Route::prefix('petugas')->name('petugas.')->middleware(['auth', 'role:petugas'])
     Route::get('/konfirmasi', [App\Http\Controllers\Petugas\DashboardPetugasController::class, 'halamanKonfirmasi'])->name('konfirmasi.halaman');
     Route::post('/konfirmasi/{id}', [App\Http\Controllers\Petugas\DashboardPetugasController::class, 'konfirmasi'])->name('konfirmasi');
     Route::post('/lapor-kendala/{id}', [App\Http\Controllers\Petugas\DashboardPetugasController::class, 'laporKendala'])->name('lapor-kendala');
+    Route::post('/selesaikan/{id}', [App\Http\Controllers\Petugas\DashboardPetugasController::class, 'selesaiKirim'])->name('konfirmasi.selesai');
     Route::get('/riwayat', [App\Http\Controllers\Petugas\DashboardPetugasController::class, 'riwayat'])->name('riwayat');
     Route::get('/profil', [App\Http\Controllers\Petugas\DashboardPetugasController::class, 'profil'])->name('profil');
 });

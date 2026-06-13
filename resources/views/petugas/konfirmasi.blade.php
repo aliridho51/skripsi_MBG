@@ -73,18 +73,18 @@
 
         <div class="bg-slate-50 px-8 py-6 border-t border-slate-200 flex flex-col sm:flex-row gap-4 animate-fade-in-up delay-6">
             @if($tugas_aktif)
-                <form action="{{ route('petugas.konfirmasi', $tugas_aktif->id) }}" method="POST" class="flex-1 flex" onsubmit="return confirm('Apakah Anda yakin akan memulai pengiriman ini?');">
-                    @csrf
-                    @if($tugas_aktif->status_pengiriman === 'Belum Dikirim')
+                @if($tugas_aktif->status_pengiriman === 'Belum Dikirim')
+                    <form action="{{ route('petugas.konfirmasi', $tugas_aktif->id) }}" method="POST" class="flex-1 flex" onsubmit="return confirm('Apakah Anda yakin akan memulai pengiriman ini?');">
+                        @csrf
                         <button type="submit" class="btn-animate btn-ripple w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg flex items-center justify-center">
                             <i class="fas fa-truck mr-3 text-lg"></i> Konfirmasi Mulai Pengiriman
                         </button>
-                    @else
-                        <button type="button" disabled class="w-full bg-slate-400 text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest cursor-not-allowed shadow-inner flex items-center justify-center">
-                            <i class="fas fa-spinner fa-spin mr-3 text-lg"></i> Sedang Dalam Perjalanan (Menunggu Sekolah)
-                        </button>
-                    @endif
-                </form>
+                    </form>
+                @else
+                    <button type="button" onclick="document.getElementById('modalSelesai').classList.remove('hidden')" class="btn-animate btn-ripple w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg flex items-center justify-center">
+                        <i class="fas fa-check-circle mr-3 text-lg"></i> Selesaikan Pengiriman
+                    </button>
+                @endif
 
                 @if($tugas_aktif->status_pengiriman === 'Dalam Perjalanan')
                     <button type="button" onclick="document.getElementById('modalKendala').classList.remove('hidden')" class="btn-animate btn-ripple w-full sm:w-auto bg-red-50 text-red-600 border-2 border-red-200 py-4 px-6 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-red-100 shadow-sm flex items-center justify-center">
@@ -124,6 +124,69 @@
             </form>
         </div>
     </div>
+
+    {{-- Modal Selesaikan Pengiriman --}}
+    <div id="modalSelesai" class="fixed inset-0 bg-slate-900/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm modal-overlay-animate">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden modal-content-animate">
+            <div class="bg-emerald-600 px-6 py-4 flex justify-between items-center">
+                <h3 class="text-white font-bold text-lg flex items-center">
+                    <i class="fas fa-clipboard-check mr-2"></i> Form Selesai Pengiriman
+                </h3>
+                <button type="button" onclick="document.getElementById('modalSelesai').classList.add('hidden')" class="text-emerald-200 hover:text-white transition hover:rotate-90 duration-300">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <form action="{{ route('petugas.konfirmasi.selesai', $tugas_aktif->id) }}" method="POST" enctype="multipart/form-data" class="p-6">
+                @csrf
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Target Porsi</label>
+                    <input type="text" disabled value="{{ $tugas_aktif->target_porsi }}" class="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-xl text-slate-500 font-bold">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Jumlah Porsi Diterima <span class="text-red-500">*</span></label>
+                    <input type="number" name="jumlah_diterima" required value="{{ $tugas_aktif->target_porsi }}" min="0" max="{{ $tugas_aktif->target_porsi }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 font-bold text-slate-700">
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Upload Foto Bukti Serah Terima <span class="text-red-500">*</span></label>
+                    <label for="foto_bukti_selesai" class="border-2 border-dashed border-slate-300 rounded-xl p-4 flex justify-center items-center bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 cursor-pointer transition-all duration-300 relative group">
+                        <input type="file" name="foto_bukti" id="foto_bukti_selesai" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" required onchange="previewPetugasFileName(this)">
+                        <div class="text-center" id="petugas_upload_placeholder">
+                            <i class="fas fa-camera text-2xl text-slate-400 mb-1 group-hover:text-emerald-500 transition-colors group-hover:scale-110 transform duration-300"></i>
+                            <p class="text-xs text-slate-500 group-hover:text-emerald-600 transition-colors">Klik untuk ambil foto/kamera HP</p>
+                        </div>
+                        <div class="text-center hidden" id="petugas_upload_preview">
+                            <i class="fas fa-image text-2xl text-emerald-500 mb-1"></i>
+                            <p class="text-xs text-emerald-600 font-semibold truncate max-w-[200px]" id="petugas_file_name">Foto terpilih</p>
+                            <p class="text-[10px] text-slate-400">Klik untuk mengganti foto</p>
+                        </div>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-animate btn-ripple w-full bg-emerald-600 text-white font-bold py-3 rounded-xl shadow-lg hover:bg-emerald-700 transition flex items-center justify-center">
+                    <i class="fas fa-check-circle mr-2 text-lg"></i> Kirim & Selesaikan Pengiriman
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function previewPetugasFileName(input) {
+            const placeholder = document.getElementById('petugas_upload_placeholder');
+            const preview = document.getElementById('petugas_upload_preview');
+            const fileNameDisplay = document.getElementById('petugas_file_name');
+
+            if (input.files && input.files[0]) {
+                fileNameDisplay.textContent = input.files[0].name;
+                placeholder.classList.add('hidden');
+                preview.classList.remove('hidden');
+            } else {
+                placeholder.classList.remove('hidden');
+                preview.classList.add('hidden');
+            }
+        }
+    </script>
     @endif
 
     </div>
