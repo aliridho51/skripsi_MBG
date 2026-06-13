@@ -275,7 +275,14 @@
                     <h4 class="font-bold text-sm text-slate-700">Foto Menu Hari Ini</h4>
                 </div>
                 <div class="p-4 relative overflow-hidden group">
-                    <img src="{{ asset($distribusi->foto_menu) }}"
+                    @php
+                        $fotoMenuPath = $distribusi->foto_menu;
+                        // Fallback jika file fisik tidak ditemukan di server (misal karena redeploy di Railway)
+                        if (!file_exists(public_path($fotoMenuPath)) && !str_starts_with($fotoMenuPath, 'http')) {
+                            $fotoMenuPath = 'images/default_menu.png';
+                        }
+                    @endphp
+                    <img src="{{ asset($fotoMenuPath) }}"
                          alt="Foto Menu MBG"
                          class="w-full max-h-64 object-cover rounded-lg shadow-sm border border-slate-200 cursor-pointer transition-transform duration-500 group-hover:scale-105"
                          onclick="openImageModal(this.src)"

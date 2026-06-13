@@ -15,7 +15,14 @@
                         <span class="text-white text-sm font-bold">Menu Hari Ini</span>
                     </div>
                     <div class="relative overflow-hidden group">
-                        <img src="{{ asset($distribusi_hari_ini->foto_menu) }}"
+                        @php
+                            $fotoMenuPath = $distribusi_hari_ini->foto_menu;
+                            // Fallback jika file fisik tidak ditemukan di server (misal karena redeploy di Railway)
+                            if (!file_exists(public_path($fotoMenuPath)) && !str_starts_with($fotoMenuPath, 'http')) {
+                                $fotoMenuPath = 'images/default_menu.png';
+                            }
+                        @endphp
+                        <img src="{{ asset($fotoMenuPath) }}"
                              alt="Foto Menu Hari Ini"
                              class="w-full max-h-64 object-cover cursor-pointer transition-transform duration-500 group-hover:scale-105"
                              onclick="openImageModal(this.src)"

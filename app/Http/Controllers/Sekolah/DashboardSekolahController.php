@@ -35,7 +35,9 @@ class DashboardSekolahController extends Controller
         }
 
         $info_hari_ini = [
-            'tanggal'       => now()->translatedFormat('d F Y'),
+            'tanggal'       => $distribusi_hari_ini 
+                                    ? \Carbon\Carbon::parse($distribusi_hari_ini->tanggal)->translatedFormat('d F Y') 
+                                    : now()->translatedFormat('d F Y'),
             'kuota'         => $distribusi_hari_ini?->target_porsi ?? 0,
             'petugas'       => $distribusi_hari_ini?->petugas?->user?->name ?? '-',
             'estimasi_tiba' => $distribusi_hari_ini?->waktu_tiba
@@ -102,7 +104,7 @@ class DashboardSekolahController extends Controller
 
         $distribusi->porsi_diterima = $request->jumlah_diterima;
         $distribusi->status_pengiriman = 'Selesai';
-        $distribusi->waktu_tiba = now();
+        $distribusi->waktu_tiba = \Carbon\Carbon::parse($distribusi->tanggal)->setTimeFrom(now());
         $distribusi->save();
 
         return redirect()->route('sekolah.riwayat')->with('success', 'Konfirmasi penerimaan berhasil disimpan.');
