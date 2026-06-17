@@ -37,6 +37,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::put('/distribusi/{distribusi}', [App\Http\Controllers\Admin\DistribusiController::class, 'update'])->name('distribusi.update');
     Route::delete('/distribusi/{distribusi}', [App\Http\Controllers\Admin\DistribusiController::class, 'destroy'])->name('distribusi.destroy');
     Route::get('/laporan', [App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('/laporan/export-excel', [App\Http\Controllers\Admin\LaporanController::class, 'exportExcel'])->name('laporan.export.excel');
+    Route::get('/laporan/export-pdf', [App\Http\Controllers\Admin\LaporanController::class, 'exportPdf'])->name('laporan.export.pdf');
     Route::get('/kritik-saran', [App\Http\Controllers\Admin\KritikSaranController::class, 'index'])->name('kritik-saran.index');
     Route::get('/monitoring', [App\Http\Controllers\Admin\MonitoringController::class, 'index'])->name('monitoring.index');
     Route::get('/monitoring/chart-data', [App\Http\Controllers\Admin\MonitoringController::class, 'chartData'])->name('monitoring.chart-data');
