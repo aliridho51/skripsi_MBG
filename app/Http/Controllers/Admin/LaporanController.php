@@ -71,6 +71,8 @@ class LaporanController extends Controller
             $file = fopen('php://output', 'w');
             // Add BOM to fix UTF-8 in Excel
             fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+            // Force Excel to parse CSV columns by comma regardless of system locale
+            fwrite($file, "sep=,\r\n");
 
             // Headings
             fputcsv($file, [

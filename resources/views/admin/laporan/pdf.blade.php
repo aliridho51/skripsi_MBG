@@ -2,251 +2,335 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan Penyaluran MBG</title>
     <style>
+        @page {
+            margin: 1.2cm 1.5cm;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: DejaVu Sans, Arial, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
             font-size: 11px;
-            color: #1a202c;
+            color: #2d3748;
             background: #fff;
+            line-height: 1.4;
         }
-        .header {
-            background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
-            color: white;
-            padding: 20px 30px;
-            margin-bottom: 20px;
+        /* Kop Surat */
+        .kop-surat {
+            text-align: center;
+            margin-bottom: 15px;
+            position: relative;
         }
-        .header-top {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        .header h1 {
-            font-size: 20px;
+        .kop-surat h2 {
+            font-size: 15px;
             font-weight: bold;
-            letter-spacing: 0.5px;
-        }
-        .header p {
-            font-size: 11px;
-            opacity: 0.85;
-            margin-top: 3px;
-        }
-        .meta-box {
-            margin: 0 30px 20px 30px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            padding: 12px 16px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .meta-item label {
-            font-size: 9px;
+            color: #1a365d;
             text-transform: uppercase;
-            color: #718096;
-            letter-spacing: 0.5px;
-            font-weight: bold;
         }
-        .meta-item p {
+        .kop-surat h3 {
             font-size: 12px;
             font-weight: bold;
-            color: #1e3a5f;
-            margin-top: 2px;
+            color: #2b6cb0;
+            margin-top: 3px;
+            text-transform: uppercase;
         }
-        .summary-cards {
-            margin: 0 30px 20px 30px;
-            display: flex;
-            gap: 12px;
+        .kop-surat p {
+            font-size: 9px;
+            color: #718096;
+            margin-top: 4px;
         }
-        .card {
-            flex: 1;
+        .garis-kop {
+            border: none;
+            border-top: 2px solid #1a365d;
+            border-bottom: 1px solid #1a365d;
+            height: 3px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+        }
+        /* Meta Table Layout (Alternative to Flexbox) */
+        .meta-table {
+            width: 100%;
+            margin-bottom: 15px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            border-spacing: 0;
+            padding: 8px 12px;
+        }
+        .meta-table td {
+            width: 25%;
+            border: none;
+            padding: 4px 6px;
+            vertical-align: top;
+        }
+        .meta-label {
+            font-size: 8px;
+            text-transform: uppercase;
+            color: #718096;
+            font-weight: bold;
+            display: block;
+        }
+        .meta-value {
+            font-size: 11px;
+            font-weight: bold;
+            color: #1a365d;
+            margin-top: 1px;
+        }
+        /* Summary Table Layout (Alternative to Flexbox) */
+        .summary-table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-spacing: 10px 0;
+            margin-left: -10px;
+            margin-right: -10px;
+        }
+        .summary-table td {
+            width: 33.33%;
+            border: none;
             padding: 12px;
-            border-radius: 6px;
+            border-radius: 4px;
             text-align: center;
         }
-        .card.blue { background: #eff6ff; border: 1px solid #bfdbfe; }
-        .card.green { background: #f0fdf4; border: 1px solid #bbf7d0; }
-        .card.orange { background: #fff7ed; border: 1px solid #fed7aa; }
-        .card label { font-size: 9px; text-transform: uppercase; color: #6b7280; font-weight: bold; }
-        .card p { font-size: 18px; font-weight: bold; margin-top: 4px; }
-        .card.blue p { color: #1d4ed8; }
-        .card.green p { color: #16a34a; }
-        .card.orange p { color: #ea580c; }
-        .table-wrapper { margin: 0 30px 30px 30px; }
+        .card-blue { background: #eff6ff; border: 1px solid #bfdbfe; }
+        .card-green { background: #f0fdf4; border: 1px solid #bbf7d0; }
+        .card-orange { background: #fff7ed; border: 1px solid #fed7aa; }
+        
+        .card-label { font-size: 8px; text-transform: uppercase; color: #718096; font-weight: bold; display: block; }
+        .card-value { font-size: 16px; font-weight: bold; margin-top: 3px; }
+        .card-subtext { font-size: 8px; color: #a0aec0; margin-top: 1px; }
+
+        .card-blue .card-value { color: #2b6cb0; }
+        .card-green .card-value { color: #2f855a; }
+        .card-orange .card-value { color: #c05621; }
+
+        /* Table Rincian */
         .section-title {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
-            color: #1e3a5f;
-            margin-bottom: 10px;
-            padding-bottom: 6px;
-            border-bottom: 2px solid #2563eb;
+            color: #1a365d;
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+            border-bottom: 2px solid #2b6cb0;
+            text-transform: uppercase;
         }
-        table {
+        .data-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 10px;
+            margin-bottom: 30px;
         }
-        thead tr {
-            background: #1e3a5f;
+        .data-table th {
+            background: #1a365d;
             color: white;
-        }
-        thead th {
-            padding: 9px 10px;
-            text-align: left;
+            padding: 8px 10px;
             font-weight: bold;
-            font-size: 9px;
+            text-align: left;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 9px;
+            border: 1px solid #1a365d;
         }
-        tbody tr:nth-child(even) { background: #f8fafc; }
-        tbody tr:nth-child(odd) { background: #ffffff; }
-        tbody td { padding: 8px 10px; border-bottom: 1px solid #e2e8f0; }
+        .data-table td {
+            padding: 7px 10px;
+            border: 1px solid #e2e8f0;
+        }
+        .data-table tr:nth-child(even) { background: #f7fafc; }
+        
         .badge {
             display: inline-block;
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 9px;
+            padding: 1px 6px;
+            border-radius: 10px;
+            font-size: 8px;
             font-weight: bold;
         }
-        .badge-green { background: #dcfce7; color: #15803d; }
-        .badge-yellow { background: #fef9c3; color: #a16207; }
-        .progress-bar-bg {
-            background: #e2e8f0;
-            border-radius: 10px;
-            height: 6px;
-            width: 80px;
+        .badge-green { background: #c6f6d5; color: #22543d; }
+        .badge-yellow { background: #fefcbf; color: #744210; }
+
+        /* Progress Bar (simplified for PDF compatibility) */
+        .progress-container {
             display: inline-block;
             vertical-align: middle;
-            margin-left: 5px;
+            margin-left: 8px;
+            width: 60px;
+            background: #edf2f7;
+            border-radius: 3px;
+            height: 5px;
+            border: 1px solid #e2e8f0;
         }
-        .progress-bar-fill {
-            background: #2563eb;
-            border-radius: 10px;
-            height: 6px;
+        .progress-bar {
+            height: 3px;
+            border-radius: 2px;
+            background: #3182ce;
         }
-        .footer {
-            margin: 0 30px;
-            padding-top: 16px;
+        .progress-green { background: #38a169; }
+        .progress-yellow { background: #ecc94b; }
+        .progress-red { background: #e53e3e; }
+
+        /* Signature Table */
+        .signature-table {
+            width: 100%;
+            margin-top: 30px;
+            border: none;
+        }
+        .signature-table td {
+            border: none;
+            width: 50%;
+            font-size: 10px;
+        }
+        .signature-title {
+            margin-bottom: 50px;
+        }
+        
+        /* Footer */
+        .footer-table {
+            width: 100%;
             border-top: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            font-size: 9px;
-            color: #9ca3af;
+            padding-top: 10px;
+            margin-top: 20px;
+            font-size: 8px;
+            color: #a0aec0;
         }
-        .no-col { width: 30px; text-align: center; }
-        .persen-col { width: 120px; }
+        .footer-table td {
+            border: none;
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        <h1>&#128209; Laporan Penyaluran MBG</h1>
-        <p>Makan Bergizi Gratis &mdash; Rekap Harian Distribusi</p>
+
+    <!-- Kop Surat -->
+    <div class="kop-surat">
+        <h2>Sistem Monitoring Program Makan Bergizi Gratis (MBG)</h2>
+        <h3>Laporan Realisasi Penyaluran Harian</h3>
+        <p>Alamat Pengelola: Gd. Kantor Pusat Program MBG Kota • Email: support@mbg-monitoring.up.railway.app</p>
+        <hr class="garis-kop">
     </div>
 
-    <!-- Meta Info -->
-    <div class="meta-box">
-        <div class="meta-item">
-            <label>Periode</label>
-            <p>
-                @if($tanggal_mulai && $tanggal_akhir)
-                    {{ \Carbon\Carbon::parse($tanggal_mulai)->translatedFormat('d F Y') }} &ndash; {{ \Carbon\Carbon::parse($tanggal_akhir)->translatedFormat('d F Y') }}
-                @elseif($tanggal_mulai)
-                    {{ \Carbon\Carbon::parse($tanggal_mulai)->translatedFormat('d F Y') }}
-                @else
-                    Semua Data
-                @endif
-            </p>
-        </div>
-        <div class="meta-item">
-            <label>Total Hari</label>
-            <p>{{ count($laporan) }} Hari</p>
-        </div>
-        <div class="meta-item">
-            <label>Dicetak Pada</label>
-            <p>{{ \Carbon\Carbon::now()->translatedFormat('d F Y, H:i') }} WIB</p>
-        </div>
-        <div class="meta-item">
-            <label>Dicetak Oleh</label>
-            <p>Admin Sistem</p>
-        </div>
-    </div>
+    <!-- Meta Info Table (No Flexbox) -->
+    <table class="meta-table">
+        <tr>
+            <td>
+                <span class="meta-label">Periode</span>
+                <div class="meta-value">
+                    @if($tanggal_mulai && $tanggal_akhir)
+                        {{ \Carbon\Carbon::parse($tanggal_mulai)->translatedFormat('d F Y') }} &ndash; {{ \Carbon\Carbon::parse($tanggal_akhir)->translatedFormat('d F Y') }}
+                    @elseif($tanggal_mulai)
+                        {{ \Carbon\Carbon::parse($tanggal_mulai)->translatedFormat('d F Y') }}
+                    @else
+                        Semua Data
+                    @endif
+                </div>
+            </td>
+            <td>
+                <span class="meta-label">Total Hari</span>
+                <div class="meta-value">{{ count($laporan) }} Hari</div>
+            </td>
+            <td>
+                <span class="meta-label">Dicetak Pada</span>
+                <div class="meta-value">{{ \Carbon\Carbon::now()->translatedFormat('d F Y, H:i') }} WIB</div>
+            </td>
+            <td>
+                <span class="meta-label">Dicetak Oleh</span>
+                <div class="meta-value">Admin Sistem</div>
+            </td>
+        </tr>
+    </table>
 
-    <!-- Summary Cards -->
+    <!-- Summary Cards Table (No Flexbox) -->
     @php
         $totalDisalurkan = collect($laporan)->sum('total_disalurkan');
         $totalTarget = collect($laporan)->sum('target');
         $persenTotal = $totalTarget > 0 ? round(($totalDisalurkan / $totalTarget) * 100, 1) : 0;
     @endphp
-    <div class="summary-cards">
-        <div class="card blue">
-            <label>Total Realisasi</label>
-            <p>{{ number_format($totalDisalurkan) }}</p>
-            <span style="font-size:9px;color:#6b7280;">Porsi Disalurkan</span>
-        </div>
-        <div class="card green">
-            <label>Total Target</label>
-            <p>{{ number_format($totalTarget) }}</p>
-            <span style="font-size:9px;color:#6b7280;">Porsi Target</span>
-        </div>
-        <div class="card orange">
-            <label>Capaian Rata-rata</label>
-            <p>{{ $persenTotal }}%</p>
-            <span style="font-size:9px;color:#6b7280;">Dari Target</span>
-        </div>
-    </div>
+    <table class="summary-table">
+        <tr>
+            <td class="card-blue">
+                <span class="card-label">Total Realisasi</span>
+                <div class="card-value">{{ number_format($totalDisalurkan) }}</div>
+                <span class="card-subtext">Porsi Disalurkan</span>
+            </td>
+            <td class="card-green">
+                <span class="card-label">Total Target</span>
+                <div class="card-value">{{ number_format($totalTarget) }}</div>
+                <span class="card-subtext">Porsi Target</span>
+            </td>
+            <td class="card-orange">
+                <span class="card-label">Capaian Rata-Rata</span>
+                <div class="card-value">{{ $persenTotal }}%</div>
+                <span class="card-subtext font-weight-bold">Dari Target Total</span>
+            </td>
+        </tr>
+    </table>
 
-    <!-- Table -->
-    <div class="table-wrapper">
-        <div class="section-title">Rincian Laporan Harian</div>
-        <table>
-            <thead>
+    <!-- Rincian Tabel -->
+    <div class="section-title">Rincian Penyaluran Harian</div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th style="width: 5%; text-align: center;">No</th>
+                <th style="width: 25%;">Tanggal</th>
+                <th style="width: 20%;">Realisasi (Porsi)</th>
+                <th style="width: 20%;">Target (Porsi)</th>
+                <th style="width: 18%;">Persentase</th>
+                <th style="width: 12%; text-align: center;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($laporan as $i => $lap)
+                @php $persen = $lap['target'] > 0 ? ($lap['total_disalurkan'] / $lap['target']) * 100 : 0; @endphp
                 <tr>
-                    <th class="no-col">No</th>
-                    <th>Tanggal</th>
-                    <th>Realisasi (Porsi)</th>
-                    <th>Target (Porsi)</th>
-                    <th class="persen-col">Persentase</th>
-                    <th>Status</th>
+                    <td style="text-align: center;">{{ $i + 1 }}</td>
+                    <td><strong>{{ \Carbon\Carbon::parse($lap['tanggal'])->translatedFormat('d F Y') }}</strong></td>
+                    <td>{{ number_format($lap['total_disalurkan']) }} Porsi</td>
+                    <td>{{ number_format($lap['target']) }} Porsi</td>
+                    <td>
+                        {{ round($persen, 1) }}%
+                        <div class="progress-container">
+                            @php
+                                $colorClass = 'progress-red';
+                                if ($persen >= 100) { $colorClass = 'progress-green'; }
+                                elseif ($persen >= 75) { $colorClass = 'progress-yellow'; }
+                            @endphp
+                            <div class="progress-bar {{ $colorClass }}" style="width: {{ min($persen, 100) }}%;"></div>
+                        </div>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="badge {{ $lap['status'] == 'Selesai' ? 'badge-green' : 'badge-yellow' }}">
+                            {{ $lap['status'] }}
+                        </span>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @forelse($laporan as $i => $lap)
-                    @php $persen = $lap['target'] > 0 ? ($lap['total_disalurkan'] / $lap['target']) * 100 : 0; @endphp
-                    <tr>
-                        <td class="no-col" style="text-align:center">{{ $i + 1 }}</td>
-                        <td><strong>{{ \Carbon\Carbon::parse($lap['tanggal'])->translatedFormat('d F Y') }}</strong></td>
-                        <td>{{ number_format($lap['total_disalurkan']) }}</td>
-                        <td>{{ number_format($lap['target']) }}</td>
-                        <td>
-                            {{ round($persen, 1) }}%
-                            <span class="progress-bar-bg">
-                                <span class="progress-bar-fill" style="width: {{ min($persen,100) }}%;"></span>
-                            </span>
-                        </td>
-                        <td>
-                            <span class="badge {{ $lap['status'] == 'Selesai' ? 'badge-green' : 'badge-yellow' }}">
-                                {{ $lap['status'] }}
-                            </span>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="6" style="text-align:center; padding: 20px; color:#9ca3af;">
-                            Tidak ada data untuk periode ini.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+            @empty
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 20px; color: #a0aec0;">
+                        Tidak ada data penyaluran pada periode ini.
+                    </td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+
+    <!-- Tanda Tangan Section -->
+    <table class="signature-table">
+        <tr>
+            <td></td>
+            <td style="text-align: right; padding-right: 20px;">
+                <div class="signature-title">
+                    <p>Surabaya, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</p>
+                    <p><strong>Pengelola Program MBG,</strong></p>
+                </div>
+                <div style="height: 60px;"></div>
+                <p><strong><u>Admin Sistem</u></strong></p>
+                <p style="font-size: 8px; color: #718096; margin-top: 2px;">NIP. 19900213 202305 1 001</p>
+            </td>
+        </tr>
+    </table>
 
     <!-- Footer -->
-    <div class="footer">
-        <span>Laporan ini dicetak secara otomatis oleh Sistem MBG</span>
-        <span>Halaman 1</span>
-    </div>
+    <table class="footer-table">
+        <tr>
+            <td>Laporan resmi diunduh dari Sistem Monitoring MBG. Dokumen ini sah dan dicetak secara elektronik.</td>
+            <td style="text-align: right;">Halaman 1 dari 1</td>
+        </tr>
+    </table>
+
 </body>
 </html>
