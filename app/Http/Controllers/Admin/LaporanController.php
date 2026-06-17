@@ -67,15 +67,7 @@ class LaporanController extends Controller
 
         $laporan = $this->buildLaporan($tanggal_mulai, $tanggal_akhir);
 
-        $headers = [
-            'Content-Type' => 'text/csv; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-            'Pragma' => 'no-cache',
-            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-            'Expires' => '0'
-        ];
-
-        $callback = function() use ($laporan) {
+        return response()->streamDownload(function() use ($laporan) {
             $file = fopen('php://output', 'w');
             // Add BOM to fix UTF-8 in Excel
             fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
@@ -105,9 +97,12 @@ class LaporanController extends Controller
                 ]);
             }
             fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        }, $filename, [
+            'Content-Type' => 'text/csv; charset=utf-8',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0'
+        ]);
     }
 
     public function exportPdf(Request $request)

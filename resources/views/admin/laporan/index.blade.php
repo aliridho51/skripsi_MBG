@@ -59,14 +59,26 @@
                     <p class="text-xs text-gray-400 mt-1">Semua data (tanpa filter)</p>
                 @endif
             </div>
+            @php
+                $suffix = '';
+                if ($tanggal_mulai && $tanggal_akhir) {
+                    $suffix = '_' . $tanggal_mulai . '_sd_' . $tanggal_akhir;
+                } elseif ($tanggal_mulai) {
+                    $suffix = '_' . $tanggal_mulai;
+                } else {
+                    $suffix = '_semua_data';
+                }
+            @endphp
             <div class="flex flex-col sm:flex-row gap-2">
                 {{-- Tombol Excel --}}
                 <a href="{{ route('admin.laporan.export.excel', array_filter(['tanggal_mulai' => $tanggal_mulai, 'tanggal_akhir' => $tanggal_akhir])) }}"
+                    download="laporan_mbg{{ $suffix }}.csv"
                     class="flex items-center bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700 transition-colors">
                     <i class="fas fa-file-excel mr-2"></i>Excel
                 </a>
                 {{-- Tombol PDF --}}
                 <a href="{{ route('admin.laporan.export.pdf', array_filter(['tanggal_mulai' => $tanggal_mulai, 'tanggal_akhir' => $tanggal_akhir])) }}"
+                    download="laporan_mbg{{ $suffix }}.pdf"
                     class="flex items-center bg-red-600 text-white px-4 py-2 rounded text-sm hover:bg-red-700 transition-colors">
                     <i class="fas fa-file-pdf mr-2"></i>PDF
                 </a>

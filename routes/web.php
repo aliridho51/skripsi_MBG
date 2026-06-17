@@ -19,7 +19,6 @@ Route::redirect('/', '/login');
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'prosesLogin'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
 // ================= ROUTE ADMIN (Dikunci khusus 'admin') =================
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
