@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Distribusi;
-use App\Exports\LaporanExport;
 use Carbon\Carbon;
-use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
@@ -65,9 +63,51 @@ class LaporanController extends Controller
             $suffix = '_semua_data';
         }
 
-        $filename = 'laporan_mbg' . $suffix . '.xlsx';
+        $filename = 'laporan_mbg' . $suffix . '.csv';
 
-        return Excel::download(new LaporanExport($tanggal_mulai, $tanggal_akhir), $filename);
+        $laporan = $this->buildLaporan($tanggal_mulai, $tanggal_akhir);
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=utf-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0'
+        ];
+
+        $callback = function() use ($laporan) {
+            $file = fopen('php://output', 'w');
+            // Add BOM to fix UTF-8 in Excel
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            // Headings
+            fputcsv($file, [
+                'No',
+                'Tanggal',
+                'Realisasi (Porsi)',
+                'Target (Porsi)',
+                'Persentase (%)',
+                'Jumlah Sekolah',
+                'Status'
+            ]);
+
+            $no = 1;
+            foreach ($laporan as $row) {
+                $persen = $row['target'] > 0 ? round(($row['total_disalurkan'] / $row['target']) * 100, 1) : 0;
+                fputcsv($file, [
+                    $no++,
+                    Carbon::parse($row['tanggal'])->translatedFormat('d F Y'),
+                    $row['total_disalurkan'],
+                    $row['target'],
+                    $persen . '%',
+                    $row['jumlah_sekolah'],
+                    $row['status']
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     public function exportPdf(Request $request)
