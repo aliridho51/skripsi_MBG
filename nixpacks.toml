@@ -8,4 +8,4 @@ cmds = ["composer install --no-dev --optimize-autoloader", "npm ci"]
 cmds = ["npm run build"]
 
 [start]
-cmd = "php artisan config:clear; php artisan cache:clear; php artisan migrate --force; php artisan storage:link --quiet || true; mkdir -p public/uploads/foto_menu public/uploads/bukti_terima public/uploads/ompreng; php -d upload_max_filesize=40M -d post_max_size=40M -d memory_limit=256M artisan serve --host=0.0.0.0 --port=${PORT:-8080}"
+cmd = "php artisan config:clear; php artisan cache:clear; php artisan view:clear; php artisan migrate --force; php artisan storage:link --quiet || true; mkdir -p public/uploads/foto_menu public/uploads/bukti_terima public/uploads/ompreng; php -d upload_max_filesize=40M -d post_max_size=40M -d memory_limit=256M artisan serve --host=0.0.0.0 --port=${PORT:-8080}"
